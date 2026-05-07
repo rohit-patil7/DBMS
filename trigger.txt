@@ -1,0 +1,96 @@
+CREATE DATABASE library_db;
+USE library_db;
+
+CREATE TABLE borrower (
+    rollin INT,
+    name VARCHAR(30),
+    nameofbook VARCHAR(30),
+    dateofissue DATE,
+    status CHAR(10)
+);
+
+INSERT INTO borrower VALUES
+(101, 'Rohit', 'DBMS', '2022-11-22', 'i'),
+(102, 'Raj', 'DM', '2022-11-23', 'i'),
+(103, 'Rohan', 'MPL', '2022-11-24', 'i'),
+(104, 'Raja', 'IOT', '2022-11-25', 'i'),
+(105, 'Neha', 'DBMS', '2022-11-26', 'r'),
+(106, 'Roy', 'DM', '2022-11-27', 'i'),
+(107, 'Ram', 'OS', '2022-11-28', 'i'),
+(108, 'Tushar', 'CN', '2022-11-29', 'r');
+
+CREATE TABLE library_audit (
+    rollin INT,
+    name VARCHAR(30),
+    nameofbook VARCHAR(30),
+    dateofissue DATE,
+    status CHAR(10),
+    time_stamp TIMESTAMP,
+    action VARCHAR(30)
+);
+
+DELIMITER //
+
+CREATE TRIGGER after_insert
+AFTER INSERT ON borrower
+FOR EACH ROW
+BEGIN
+    INSERT INTO library_audit
+    VALUES (
+        NEW.rollin,
+        NEW.name,
+        NEW.nameofbook,
+        NEW.dateofissue,
+        NEW.status,
+        CURRENT_TIMESTAMP,
+        'insert'
+    );
+END //
+
+CREATE TRIGGER after_delete
+AFTER DELETE ON borrower
+FOR EACH ROW
+BEGIN
+    INSERT INTO library_audit
+    VALUES (
+        OLD.rollin,
+        OLD.name,
+        OLD.nameofbook,
+        OLD.dateofissue,
+        OLD.status,
+        CURRENT_TIMESTAMP,
+        'delete'
+    );
+END //
+
+CREATE TRIGGER after_update
+AFTER UPDATE ON borrower
+FOR EACH ROW
+BEGIN
+    INSERT INTO library_audit
+    VALUES (
+        NEW.rollin,
+        NEW.name,
+        NEW.nameofbook,
+        NEW.dateofissue,
+        NEW.status,
+        CURRENT_TIMESTAMP,
+        'update'
+    );
+END //
+
+DELIMITER ;
+
+-- TEST OPERATIONS
+
+INSERT INTO borrower VALUES (109, 'prachi', 'MPL', '2022-12-22', 'i');
+
+DELETE FROM borrower WHERE rollin = 102;
+DELETE FROM borrower WHERE rollin = 103;
+
+UPDATE borrower SET status = 'r' WHERE rollin = 104;
+
+-- VIEW RESULTS
+
+SELECT * FROM library_audit;
+SELECT * FROM borrower;
