@@ -1,0 +1,48 @@
+create database Database1;
+use Database1;
+
+create table persons(
+    personID int primary key,
+    firstname varchar(20) not null,
+    lastname varchar(20) not null,
+    age int check (age >= 18)
+);
+
+insert into persons values (1,'Krishna','Roy',20);
+insert into persons values (2,'Rohit','Pawar',19);
+insert into persons values (3,'Govinda','Patil',20);
+
+select * from persons;
+
+alter table persons add middlename varchar(20);
+
+select * from persons;
+
+alter table persons drop column middlename;
+
+select * from persons;
+
+
+create table customer(
+    id int primary key,
+    name varchar(20) not null,
+    city varchar(20),
+    sal int check (sal > 0),
+    personID int,
+    unique(name),
+    foreign key (personID) references persons(personID)
+);
+
+insert into customer values(1,'Krishna','Pune',1000,1);
+insert into customer values(2,'Rohit','Nashik',5000,2);
+insert into customer values(3,'Govinda','Mumbai',7000,3);
+
+select * from customer;
+
+update customer set city='Mumbai' where id in (1,2);
+
+update customer set name='Peter' where id=1;
+
+select * from customer;
+
+desc customer;
