@@ -1,0 +1,46 @@
+use company_db
+
+db.createCollection("Employee")
+
+db.Employee.insertMany([
+  { id: 1, Name: "Pankaj", Salary: 80000, Dept: "Comp" },
+  { id: 2, Name: "Daman", Salary: 50000, Dept: "Electrical" },
+  { id: 3, Name: "Aman", Salary: 70000, Dept: "Mechanical" },
+  { id: 4, Name: "Ajay", Salary: 56000, Dept: "Instru" },
+  { id: 5, Name: "Manoj", Salary: 78000, Dept: "Comp" }
+])
+
+db.Employee.find().pretty()
+
+db.Employee.aggregate([
+  { $match: { Dept: "Comp" } }
+])
+
+db.Employee.aggregate([
+  { $group: { _id: 1, minSal: { $min: "$Salary" } } }
+])
+
+db.Employee.aggregate([
+  { $group: { _id: 1, maxSal: { $max: "$Salary" } } }
+])
+
+db.Employee.aggregate([
+  { $group: { _id: 1, avgSal: { $avg: "$Salary" } } }
+])
+
+db.Employee.aggregate([
+  { $group: { _id: 1, totalSal: { $sum: "$Salary" } } }
+])
+
+db.Employee.aggregate([
+  { $sort: { Salary: 1 } }
+])
+
+db.Employee.aggregate([
+  { $group: { _id: 1, minSal: { $min: "$Salary" } } },
+  { $sort: { minSal: 1 } }
+])
+
+db.Employee.createIndex({ Name: 1 })
+
+db.Employee.getIndexes()
