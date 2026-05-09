@@ -1,0 +1,58 @@
+use college_db
+
+db.createCollection("Teacher_info")
+
+db.Teacher_info.save({
+  Teacher_id: "t1",
+  Teacher_Name: "Ravi",
+  Dept_Name: "IT",
+  Sal: 30000,
+  status: "A"
+})
+
+db.Teacher_info.save({
+  Teacher_id: "t2",
+  Teacher_Name: "Ravindra",
+  Dept_Name: "IT",
+  Sal: 20000,
+  status: "A"
+})
+
+db.Teacher_info.save({
+  Teacher_id: "t3",
+  Teacher_Name: "Akshay",
+  Dept_Name: "Comp",
+  Sal: 26000,
+  status: "N"
+})
+
+db.Teacher_info.find()
+
+db.Teacher_info.find({ Sal: 20000 })
+
+db.Teacher_info.find({ Teacher_id: "t1" })
+
+db.Teacher_info.find({ status: "A", Sal: 20000 })
+
+db.Teacher_info.find({
+  $or: [
+    { Sal: 20000 },
+    { Dept_Name: "IT" }
+  ]
+})
+
+db.Teacher_info.find({ Sal: { $gt: 30000 } })
+
+db.Teacher_info.find({ Sal: { $lt: 30000 } })
+
+db.Teacher_info.find({ status: "A" }).sort({ Sal: 1 })
+
+db.Teacher_info.update(
+  { status: "A" },
+  { $inc: { Sal: 1000 } },
+  { multi: true }
+)
+
+db.Teacher_info.remove({ Teacher_id: "t1" })
+
+db.Teacher_info.drop()
