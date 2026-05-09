@@ -1,0 +1,76 @@
+CREATE DATABASE ecommerce_db;
+USE ecommerce_db;
+
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    city VARCHAR(30)
+);
+
+CREATE TABLE Product (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    price DECIMAL(10,2)
+);
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);
+
+INSERT INTO Customer VALUES
+(1, 'Amit', 'Pune'),
+(2, 'Neha', 'Mumbai'),
+(3, 'Rahul', 'Nagpur');
+
+INSERT INTO Product VALUES
+(101, 'Laptop', 55000),
+(102, 'Mobile', 20000),
+(103, 'Headphones', 2500);
+
+INSERT INTO Orders VALUES
+(1001, 1, 101, 1),
+(1002, 2, 102, 2),
+(1003, 1, 103, 3);
+
+SELECT customer_name
+FROM Customer
+WHERE customer_id IN (SELECT customer_id FROM Orders);
+
+SELECT customer_name
+FROM Customer
+WHERE customer_id NOT IN (SELECT customer_id FROM Orders);
+
+SELECT product_name, price
+FROM Product
+WHERE price = (SELECT MAX(price) FROM Product);
+
+SELECT order_id,
+(SELECT price FROM Product WHERE Product.product_id = Orders.product_id) * quantity AS total_amount
+FROM Orders;
+
+SELECT customer_id, total
+FROM (
+    SELECT Orders.customer_id,
+           SUM(Product.price * Orders.quantity) AS total
+    FROM Orders
+    JOIN Product ON Orders.product_id = Product.product_id
+    GROUP BY Orders.customer_id
+) AS Purchase
+WHERE total > 30000;
+
+SELECT product_name, price
+FROM Product
+WHERE price > (SELECT AVG(price) FROM Product);
+
+SELECT customer_name
+FROM Customer C
+WHERE EXISTS (
+    SELECT 1
+    FROM Orders O
+    WHERE O.customer_id = C.customer_id
+);
