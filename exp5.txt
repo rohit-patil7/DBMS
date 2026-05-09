@@ -1,0 +1,68 @@
+create database if not exists database1;
+use database1;
+
+drop table if exists capital;
+drop table if exists state;
+
+create table capital(
+cap_no int primary key,
+cap_name varchar(20),
+state_no int
+);
+
+create table state(
+state_no int primary key,
+state_name varchar(20),
+state_code int,
+capital varchar(20)
+);
+
+insert into capital values
+(1,'MH',1),
+(2,'RAJ',2),
+(3,'GOA',3),
+(4,'GUJ',4),
+(5,'KAR',5);
+
+insert into state values
+(1,'MH',1,'MUM'),
+(2,'RAJ',2,'JAI'),
+(3,'GOA',3,'PAN'),
+(4,'GUJ',4,'SUR'),
+(5,'KAR',5,'BAN');
+
+select * from capital;
+select * from state;
+
+select capital.cap_no, state.state_no
+from capital
+inner join state
+on capital.cap_no = state.state_no;
+
+select capital.cap_no, state.state_no
+from capital
+left join state
+on capital.cap_no = state.state_no;
+
+select capital.cap_no, state.state_no
+from capital
+right join state
+on capital.cap_no = state.state_no;
+
+select capital.cap_no, state.state_no
+from capital
+left join state on capital.cap_no = state.state_no
+union
+select capital.cap_no, state.state_no
+from capital
+right join state on capital.cap_no = state.state_no;
+
+create view capital_state_view as
+select capital.cap_no, capital.cap_name, state.capital, state.state_no
+from capital
+inner join state
+on capital.cap_no = state.state_no;
+
+select * from capital_state_view;
+
+drop view capital_state_view;
