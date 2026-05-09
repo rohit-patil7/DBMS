@@ -1,0 +1,53 @@
+create database Database4;
+
+use Database4;
+
+create table Student_Result(
+    student_id int,
+    student_name varchar(50),
+    subject varchar(30),
+    marks int,
+    department varchar(30)
+);
+
+insert into Student_Result values
+(1,'Amit','DBMS',78,'Computer'),
+(2,'Neha','DBMS',85,'Computer'),
+(3,'Rahul','OS',72,'Computer'),
+(4,'Sneha','OS',88,'IT'),
+(5,'Pooja','DBMS',91,'IT'),
+(6,'Ravi','OS',65,'IT');
+
+select department, count(student_id) as Total_Students
+from Student_Result
+group by department;
+
+select subject, avg(marks) as Avg_Marks
+from Student_Result
+group by subject;
+
+select department,
+max(marks) as Highest_Marks,
+min(marks) as Lowest_Marks
+from Student_Result
+group by department;
+
+select department, sum(marks) as Total_Marks
+from Student_Result
+group by department;
+
+select department, avg(marks) as Avg_Marks
+from Student_Result
+group by department
+having avg(marks)>80;
+
+select subject, count(student_id) as Student_Count
+from Student_Result
+group by subject
+having count(student_id)>2;
+
+select department, avg(marks) as Avg_Marks
+from Student_Result
+where marks>=70
+group by department
+having avg(marks)>75;
