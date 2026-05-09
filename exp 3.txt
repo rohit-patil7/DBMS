@@ -1,0 +1,78 @@
+create database Database3;
+use Database3;
+
+create table Book(
+Book_ID int primary key,
+Book_Name varchar(50) not null,
+Author varchar(50),
+price int check(price>0),
+category varchar(30)
+);
+
+create table Issued_Book(
+Book_Name varchar(50)
+);
+
+insert into Book values
+(1,'Database Systems','Navathe',500,'Education'),
+(2,'Operating System','Silberschatz',650,'Education'),
+(3,'C Programming','Dennis Ritchie',300,'Programming'),
+(4,'Python Basics','Guido',400,'Programming');
+
+select * from Book;
+
+update Book
+set price=price+(price*0.10)
+where category='Programming';
+
+delete from Book
+where price<350;
+
+select Book_Name,price,price+50 as new_price from Book;
+
+select * from Book
+where category='Education' and price>500;
+
+select * from Book
+where Book_Name like 'D%';
+
+select upper(Book_Name),lower(Author) from Book;
+
+select Book_Name,length(Book_Name) from Book;
+
+select substring(Book_Name,1,4) from Book;
+
+insert into Issued_Book values
+('Database Systems'),
+('Python Basics');
+
+select * from Issued_Book;
+
+select Book_Name from Book
+union
+select Book_Name from Issued_Book;
+
+select b.Book_Name from Book b
+inner join Issued_Book i
+on b.Book_Name=i.Book_Name;
+
+select Book_Name from Book
+where Book_Name not in (select Book_Name from Issued_Book);
+
+start transaction;
+
+insert into Book values(5,'Java','James Gosling',700,'Programming');
+
+savepoint A;
+
+update Book set price=800 where Book_ID=5;
+
+rollback to A;
+
+commit;
+
+create user 'user1'@'localhost' identified by '1234';
+
+grant select,insert on Database3.* to 'user1'@'localhost';
+
+revoke insert on Database3.* from 'user1'@'localhost';
